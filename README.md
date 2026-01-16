@@ -1,3 +1,3 @@
-- Nom:
-- Prénom:
-- URL vercel: 
+- Nom:Araldi
+- Prénom: Théo
+- URL vercel: elegant-manatee-dab9ac.netlify.app
