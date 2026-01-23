@@ -12,7 +12,7 @@ const offres = [
         "nomMaison": "Beverly Springfield",
         "prix": 2700,
         "surface": 45,
-        "imgUrl": "/assets/maison3.jpg"
+        "imgUrl": "maison3.jpg"
     },
     {
         "adresse": "2699 Green Valley, Highland Lake",
@@ -40,33 +40,27 @@ const offres = [
 ---
 
 <Layout titre="Offres">
-	<div class="container mx-auto px-4 py-8">
-		<h1 class="text-4xl font-bold mb-6 text-gray-800">Offres</h1>
-		
-		<button 
-			id="favori-button" 
-			class="bg-slate-600 hover:bg-slate-700 rounded-lg text-white px-6 py-2 mb-8 font-semibold transition-colors"
-		>
-			Afficher les favoris
-		</button>
-
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 offres-container">
-			{
-				offres.map(offre => (
-					<OffreCard 
-						id={offre.id}
-						nomMaison={offre.nomMaison}
-						adresse={offre.adresse}
-						prix={offre.prix}
-						nbChambres={offre.nbChambres}
-						nbSdb={offre.nbSdb}
-						surface={offre.surface}
-						imgUrl={offre.imgUrl}
-						favori={offre.favori}
-					/>
-				))
-			}
-		</div>
+	<h1 class="text-3xl font-bold mb-8">Offres</h1>
+	
+	<button id="favori-button" class="bg-slate-600 rounded-lg text-white p-2 mb-6 hover:bg-slate-700 transition-colors">
+		Afficher les favoris
+	</button>
+	
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+		{offres.map((offre) => (
+			<div class="offre" data-favori={offre.favori.toString()}>
+				<OffreCard 
+					nomMaison={offre.nomMaison}
+					adresse={offre.adresse}
+					prix={offre.prix}
+					nbChambres={offre.nbChambres}
+					nbSdb={offre.nbSdb}
+					surface={offre.surface}
+					imgUrl={offre.imgUrl}
+					favori={offre.favori}
+				/>
+			</div>
+		))}
 	</div>
 </Layout>
 
