@@ -1,31 +1,36 @@
 ---
 interface Props {
+  id: string;
   nomMaison: string;
   adresse: string;
   prix: number;
   nbChambres: number;
   nbSdb: number;
   surface: number;
-  imgUrl: string;
+  imgUrl: ImageMetadata | string;
   favori?: boolean;
 }
 
-const { nomMaison, adresse, prix, nbChambres, nbSdb, surface, imgUrl, favori = false } = Astro.props;
+import type { ImageMetadata } from 'astro';
+
+const { id, nomMaison, adresse, prix, nbChambres, nbSdb, surface, imgUrl, favori = false } = Astro.props;
+const imageSrc = typeof imgUrl === 'string' ? imgUrl : imgUrl.src;
 ---
 
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+<div class="offre-card rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300" id={`card-${id}`} data-offreid={id} data-favori={favori.toString()} style={`background: ${favori ? 'linear-gradient(120deg, #ff8c00 0%, #8b008b 100%)' : '#ffffff'}`}>
   <!-- Image Container -->
   <div class="relative w-full h-48 bg-gray-200 overflow-hidden">
     <img 
-      src={imgUrl} 
+      src={imageSrc} 
       alt={nomMaison}
       class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
     />
-    {favori && (
-      <div class="absolute top-2 right-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-        ⭐ Favori
-      </div>
-    )}
+    <button 
+      class="toggle-favori absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold transition-colors duration-200"
+      type="button"
+    >
+      {favori ? '⭐ Favori' : '☆ Ajouter'}
+    </button>
   </div>
 
   <!-- Content Container -->
@@ -37,7 +42,7 @@ const { nomMaison, adresse, prix, nbChambres, nbSdb, surface, imgUrl, favori = f
 
     <!-- Address -->
     <p class="text-gray-600 text-sm mb-3 truncate">
-      📍 {adresse}
+       {adresse}
     </p>
 
     <!-- Price -->
@@ -62,8 +67,49 @@ const { nomMaison, adresse, prix, nbChambres, nbSdb, surface, imgUrl, favori = f
     </div>
 
     <!-- Action Button -->
-    <button class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200">
+    <button class="w-full bg-blue-600 text-white py-2 rounded-md font-semibold hover:bg-blue-700 transition-colors duration-200" type="button">
       Voir les détails
     </button>
   </div>
 </div>
+
+<script define:vars={{ offreId: id }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const cardId = `card-${offreId}`;
+    const card = document.getElementById(cardId);
+    const toggleBtn = card?.querySelector('.toggle-favori');
+    
+    if (card && toggleBtn) {
+      // Charger l'état du localStorage au chargement
+      const savedFavori = localStorage.getItem(`favori-${offreId}`);
+      
+      if (savedFavori === 'true') {
+        card.dataset.favori = 'true';
+        card.style.background = 'linear-gradient(120deg, #ff8c00 0%, #8b008b 100%)';
+        toggleBtn.textContent = '⭐ Favori';
+      }
+      
+      // Ajouter l'événement click
+      toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        const isFavori = card.dataset.favori === 'true';
+        const newFavoriState = !isFavori;
+        
+        // Sauvegarder dans localStorage
+        localStorage.setItem(`favori-${offreId}`, newFavoriState.toString());
+        
+        // Mettre à jour l'affichage
+        card.dataset.favori = newFavoriState.toString();
+        card.style.background = newFavoriState ? 'linear-gradient(120deg, #ff8c00 0%, #8b008b 100%)' : '#ffffff';
+        
+        toggleBtn.textContent = newFavoriState ? '⭐ Favori' : '☆ Ajouter';
+        
+        console.log(`Favori ${offreId}:`, newFavoriState);
+      });
+    } else {
+      console.warn(`Éléments non trouvés: card=${!!card}, btn=${!!toggleBtn}`);
+    }
+  });
+</script>

@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import OffreCard from '../components/OffreCard.astro';
+import maison1 from '../assets/maison1.jpg';
+import maison3 from '../assets/maison3.jpg';
+import maison4 from '../assets/maison4.jpg';
 
 const offres = [
     {
@@ -12,7 +15,7 @@ const offres = [
         "nomMaison": "Beverly Springfield",
         "prix": 2700,
         "surface": 45,
-        "imgUrl": "maison3.jpg"
+        "img": maison3,
     },
     {
         "adresse": "2699 Green Valley, Highland Lake",
@@ -23,7 +26,7 @@ const offres = [
         "nomMaison": "Palm Harbor",
         "prix": 2095,
         "surface": 42,
-        "imgUrl": "image2.png"
+        "img": maison1
     },
     {
         "adresse": "909 Woodland St, Michigan, IN",
@@ -34,7 +37,7 @@ const offres = [
         "nomMaison": "Faulkner Ave",
         "prix": 4550,
         "surface": 80,
-        "imgUrl": "image3.png"
+        "img": maison4
     }
 ]
 ---
@@ -50,13 +53,14 @@ const offres = [
 		{offres.map((offre) => (
 			<div class="offre" data-favori={offre.favori.toString()}>
 				<OffreCard 
+					id={offre.id}
 					nomMaison={offre.nomMaison}
 					adresse={offre.adresse}
 					prix={offre.prix}
 					nbChambres={offre.nbChambres}
 					nbSdb={offre.nbSdb}
 					surface={offre.surface}
-					imgUrl={offre.imgUrl}
+					imgUrl={offre.img}
 					favori={offre.favori}
 				/>
 			</div>
